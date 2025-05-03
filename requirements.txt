@@ -1,0 +1,11 @@
+# Core UI & OCR
+streamlit>=1.33
+pdfplumber==0.11.0
+pytesseract==0.3.10
+Pillow>=10.0
+
+# OpenAI SDK (v1 interface)
+openai>=1.13
+
+# YAML for template editing
+pyyaml>=6.0
