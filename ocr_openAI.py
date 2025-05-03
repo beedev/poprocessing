@@ -24,6 +24,7 @@ OPENAI_API_KEY = "sk-proj-Q28-wG-ndNUCY76hJjdUpR1fF0sgQhTJZZW3JDdLZfqAgUKtAeLdyC
 try:
     import openai
     client = openai.OpenAI(api_key=OPENAI_API_KEY or os.getenv("OPENAI_API_KEY"))
+    print(client)
 except ImportError:
     st.error("openai package is missing – run `pip install openai`.")
     st.stop()
