@@ -18,7 +18,6 @@ import pytesseract
 # ----------------------
 # 🔑 API key configuration
 # ----------------------
-OPENAI_API_KEY = "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"  # ← put your key here or set $OPENAI_API_KEY
 
 # Import the new OpenAI client (v1)
 try:
