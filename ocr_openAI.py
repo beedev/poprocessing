@@ -22,7 +22,7 @@ import pytesseract
 # Import the new OpenAI client (v1)
 try:
     import openai
-    client = openai.OpenAI(api_key=OPENAI_API_KEY or os.getenv("OPENAI_API_KEY"))
+    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     print(client)
 except ImportError:
     st.error("openai package is missing – run `pip install openai`.")
