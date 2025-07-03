@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Calorie Calculator - 180 kcal Target</title>
+<style>
+  body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #f9f7d9 0%, #ffecd2 50%, #fcb69f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+    overflow-y: auto;
+  }
+  select, input, button {
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .result {
+    margin-top: 20px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Complete Calorie Calculator (180 kcal Target)</h2>
+
+<!-- Veggies -->
+<select id="veg1" onchange="resetWeight('veg1Weight')"></select>
+<input type="number" id="veg1Weight" placeholder="Veg 1 weight (grams)">
+
+<select id="veg2" onchange="resetWeight('veg2Weight')"></select>
+<input type="number" id="veg2Weight" placeholder="Veg 2 weight (grams)">
+
+<select id="veg3" onchange="resetWeight('veg3Weight')"></select>
+<input type="number" id="veg3Weight" placeholder="Veg 3 weight (grams)">
+
+<select id="veg4" onchange="resetWeight('veg4Weight')"></select>
+<input type="number" id="veg4Weight" placeholder="Veg 4 weight (grams)">
+
+<!-- Oil -->
+<select id="oil" onchange="resetWeight('oilWeight')"></select>
+<input type="number" id="oilWeight" placeholder="Oil weight (tablespoons)">
+
+<button onclick="calculateCalories()">Calculate</button>
+
+<div class="result" id="result"></div>
+</div>
+
+<script>
+const veggies = {
+  "Cabbage": 25 / 100, "Onion": 40 / 100, "Spring onion": 32 / 100, "Olives": 116 / 100,
+  "Carrot": 41 / 100, "Beetroot": 43 / 100, "Cauliflower": 25 / 100, "Broccoli": 34 / 100,
+  "Cucumber": 15 / 100, "Celery": 14 / 100, "French beans": 24 / 100, "Spinach": 23 / 100,
+  "Avocado": 160 / 100, "Lettuce": 14 / 100, "Zucchini": 20 / 100, "Asparagus": 20 / 100,
+  "Raw mango": 60 / 100, "Gooseberries": 24 / 100, "White Pumpkin": 17 / 100,
+  "Bok Choy": 13 / 100, "Brussel Sprouts": 43 / 100, "Ginger": 80 / 100, "Garlic": 149 / 100
+};
+
+const oils = {
+  "Ghee": 116, "Butter": 102, "Olive Oil": 119, "Coconut Oil": 113,
+  "Sesame Oil": 120, "Mustard Oil": 120, "Avocado Oil": 124
+};
+
+function populateDropdown(id, options) {
+  const select = document.getElementById(id);
+  select.innerHTML = '<option value="">None</option>' + Object.keys(options).map(item => `<option value="${item}">${item}</option>`).join('');
+}
+
+['veg1', 'veg2', 'veg3', 'veg4'].forEach(id => populateDropdown(id, veggies));
+populateDropdown('oil', oils);
+
+function resetWeight(weightId) {
+  document.getElementById(weightId).value = '';
+}
+
+function calculateCalories() {
+  let totalCalories = 0;
+  let items = [];
+
+  for (let i = 1; i <= 4; i++) {
+    const veg = document.getElementById(`veg${i}`).value;
+    const weight = parseFloat(document.getElementById(`veg${i}Weight`).value) || 0;
+    if (veg) {
+      const cal = weight * veggies[veg];
+      totalCalories += cal;
+      items.push({ name: veg, weight, calories: cal, type: 'veg' });
+    }
+  }
+
+  const oil = document.getElementById("oil").value;
+  const oilWeight = parseFloat(document.getElementById("oilWeight").value) || 0;
+  const oilCalories = oilWeight * oils[oil];
+  totalCalories += oilCalories;
+  items.push({ name: oil, weight: oilWeight, calories: oilCalories, type: 'oil' });
+
+  if (totalCalories === 0) {
+    document.getElementById("result").innerText = "Please enter valid weights.";
+    return;
+  }
+
+  const scale = 180 / totalCalories;
+
+  const resultText = items.map(item => {
+    const adjWeight = item.type === 'veg' ? (item.weight * scale).toFixed(1) + ' g' : (item.weight * scale).toFixed(2) + ' tbsp';
+    const adjCalories = (item.calories * scale).toFixed(1) + ' kcal';
+    return `${item.name}: ${adjWeight} (${adjCalories})`;
+  }).join('<br>');
+
+  document.getElementById("result").innerHTML = `<p>Adjusted to exactly 180 kcal:</p>${resultText}`;
+}
+</script>
+
+</body>
+</html>
